@@ -8,7 +8,7 @@
 // PROD: thay bằng URL Render sau khi deploy (vd: https://biogroup-api.onrender.com)
 const _BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:5207'
-  : 'https://biogroup-api.onrender.com'; // ← CẬP NHẬT sau khi deploy Render
+  : 'https://biogroup.onrender.com';
 window.API_URL          = _BASE + '/api/products';
 window.AUTH_API_URL     = _BASE + '/api/auth';
 window.ORDERS_API_URL   = _BASE + '/api/orders';
