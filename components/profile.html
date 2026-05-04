@@ -372,6 +372,9 @@
         <div class="profile-menu-item" onclick="showTab('distributor', this)" id="distMenuItem">
           <span class="mi-icon">🏪</span> Nhà phân phối
         </div>
+        <div class="profile-menu-item" id="adminMenuItem" onclick="window.location.href='admin.html'" style="display:none;color:#e53935;font-weight:600">
+          <span class="mi-icon">⚙️</span> Quản trị Admin
+        </div>
       </nav>
 
       <button class="profile-logout" onclick="handleLogout()">🚪 Đăng xuất</button>
@@ -595,7 +598,14 @@
           phone:     raw.phone     || raw.Phone     || '',
           address:   raw.address   || raw.Address   || '',
           createdAt: raw.createdAt || raw.CreatedAt || null,
+          role:      raw.role      || raw.Role      || 'User',
         };
+
+        // Hiện nút Admin nếu có quyền
+        if (user.role === 'Admin') {
+          const adminBtn = document.getElementById('adminMenuItem');
+          if (adminBtn) adminBtn.style.display = '';
+        }
 
         // Điền vào sidebar
         document.getElementById('profileName').textContent       = user.name  || '—';
