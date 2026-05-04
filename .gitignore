@@ -1,0 +1,19 @@
+# .NET Build outputs
+BioGroupAPI/bin/
+BioGroupAPI/obj/
+*.user
+*.suo
+.vs/
+
+# Secrets (không commit lên git)
+BioGroupAPI/appsettings.Production.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude AI memory
+.claude/
+
+# Logs
+*.log

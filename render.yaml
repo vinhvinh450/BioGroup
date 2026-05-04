@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: biogroup-api
+    runtime: dotnet
+    rootDir: BioGroupAPI
+    buildCommand: dotnet publish -c Release -o out
+    startCommand: dotnet out/BioGroupAPI.dll
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: biogroup-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://0.0.0.0:10000
+
+databases:
+  - name: biogroup-db
+    plan: free

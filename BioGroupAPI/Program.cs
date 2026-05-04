@@ -1,4 +1,4 @@
-using BioGroupAPI.Data;
+﻿using BioGroupAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -16,10 +16,21 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Database
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<BioGroupContext>(options =>
-    options.UseSqlServer(connectionString));
+// Database: PostgreSQL (Render) hoặc SQL Server (local)
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    // Render PostgreSQL
+    builder.Services.AddDbContext<BioGroupContext>(options =>
+        options.UseNpgsql(databaseUrl));
+}
+else
+{
+    // Local SQL Server
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    builder.Services.AddDbContext<BioGroupContext>(options =>
+        options.UseSqlServer(connectionString));
+}
 
 // CORS
 builder.Services.AddCors(options =>
@@ -32,9 +43,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ✅ JWT Authentication (thêm mới)
+// JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"] ?? "default-secret-key-for-development";
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET")
+    ?? jwtSettings["SecretKey"]
+    ?? "biogroup-default-secret-key-2026";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -70,7 +83,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 
-// ✅ Thứ tự quan trọng: Authentication trước Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
