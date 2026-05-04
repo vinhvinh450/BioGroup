@@ -724,13 +724,14 @@
 })();
 
 /* ── API URLs ── */
-const _ADM_AUTH   = 'http://localhost:5207/api/auth';
-const _ADM_PROD   = 'http://localhost:5207/api/products';
-const _ADM_USERS  = 'http://localhost:5207/api/users';
-// ✅ FIX: Dùng /all để lấy tất cả đơn hàng (không filter theo userId)
-const _ADM_ORDERS = 'http://localhost:5207/api/orders/all';
-// Endpoint cập nhật trạng thái vẫn dùng /orders/{id}/status
-const _ADM_ORDERS_STATUS = 'http://localhost:5207/api/orders';
+const _ADM_BASE   = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:5207'
+  : 'https://biogroup.onrender.com';
+const _ADM_AUTH   = _ADM_BASE + '/api/auth';
+const _ADM_PROD   = _ADM_BASE + '/api/products';
+const _ADM_USERS  = _ADM_BASE + '/api/users';
+const _ADM_ORDERS = _ADM_BASE + '/api/orders/all';
+const _ADM_ORDERS_STATUS = _ADM_BASE + '/api/orders';
 
 const _adminToken = localStorage.getItem('token');
 function authHeader() {
@@ -778,7 +779,7 @@ function gotoTab(name, el) {
 }
 
 /* ── DISTRIBUTOR ── */
-const _ADM_DIST = 'http://localhost:5207/api/distributor';
+const _ADM_DIST = _ADM_BASE + '/api/distributor';
 let _distApps = [], _distProds = [];
 
 function switchDistTab(tab, el) {
