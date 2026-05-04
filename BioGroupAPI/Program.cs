@@ -71,8 +71,16 @@ var app = builder.Build();
 // Tạo database nếu chưa có
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<BioGroupContext>();
-    dbContext.Database.EnsureCreated();
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<BioGroupContext>();
+        dbContext.Database.EnsureCreated();
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Không thể kết nối database khi khởi động.");
+    }
 }
 
 if (app.Environment.IsDevelopment())

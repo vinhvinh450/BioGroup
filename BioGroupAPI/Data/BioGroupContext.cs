@@ -71,12 +71,14 @@ public class BioGroupContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Status).HasConversion<string>();
+            entity.Property(e => e.TotalAmount).HasPrecision(10, 2);
         });
 
         // ================= ORDER ITEM =================
         modelBuilder.Entity<OrderItem>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.UnitPrice).HasPrecision(10, 2);
 
             entity.HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItems)
@@ -130,6 +132,7 @@ public class BioGroupContext : DbContext
         modelBuilder.Entity<Payment>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.Amount).HasPrecision(10, 2);
 
             entity.HasOne(p => p.Order)
                 .WithOne(o => o.Payment)
