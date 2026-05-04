@@ -1,0 +1,6 @@
+@BioGroupAPI_HostAddress = http://localhost:5207
+
+GET {{BioGroupAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

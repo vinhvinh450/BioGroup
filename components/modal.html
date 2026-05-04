@@ -1,0 +1,59 @@
+<!--
+  components/modal.html
+  BioWraps Vietnam Shop — Login/Register Modal
+-->
+
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="close-btn" onclick="closeLogin()">✕</button>
+
+    <!-- Tabs -->
+    <div class="modal-tabs">
+      <div class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Đăng nhập</div>
+      <div class="modal-tab" id="tabReg" onclick="switchTab('reg')">Đăng ký</div>
+    </div>
+
+    <!-- Form: Đăng nhập -->
+    <div id="formLogin">
+      <div class="field">
+        <label>Email / Số điện thoại</label>
+        <input type="text" id="loginEmail" placeholder="Nhập email hoặc số điện thoại" />
+      </div>
+      <div class="field">
+        <label>Mật khẩu</label>
+        <input type="password" id="loginPass" placeholder="Nhập mật khẩu" />
+      </div>
+      <span class="forgot-link">Quên mật khẩu?</span>
+      <button class="modal-btn" onclick="doLogin()">Đăng nhập</button>
+      <div class="divider-or"><span>HOẶC</span></div>
+      <button class="google-btn" onclick="doGoogleLogin()">🌐 Tiếp tục với Google</button>
+    </div>
+
+    <!-- Form: Đăng ký -->
+    <div id="formReg" style="display:none">
+      <div class="field">
+        <label>Họ và tên</label>
+        <input type="text" id="regName" placeholder="Nguyễn Văn A" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="email@example.com" />
+      </div>
+      <div class="field">
+        <label>Số điện thoại</label>
+        <input type="tel" id="regPhone" placeholder="0901 234 567" />
+      </div>
+      <div class="field">
+        <label>Mật khẩu</label>
+        <input type="password" id="regPass" placeholder="Tối thiểu 8 ký tự" />
+      </div>
+      <div class="field">
+        <label>Xác nhận mật khẩu</label>
+        <input type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" />
+      </div>
+      <button class="modal-btn" onclick="doRegister()">Tạo tài khoản</button>
+      <div class="divider-or"><span>HOẶC</span></div>
+      <button class="google-btn" onclick="doGoogleLogin()">🌐 Đăng ký với Google</button>
+    </div>
+  </div>
+</div>

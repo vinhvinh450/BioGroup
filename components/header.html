@@ -1,0 +1,83 @@
+<!--
+  components/header.html
+  BioWraps Vietnam Shop — Header & Nav Component
+
+  Cách dùng: Copy paste vào <body> hoặc load bằng JS fetch
+-->
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>🌿 Bao bì sinh học từ vỏ cam — An toàn thực phẩm, tự phân hủy 100%</span>
+    <div>
+
+      <a href="https://www.biowrapsvietnam.com" target="_blank">Về BioWraps</a>
+      <a href="#footer">Liên hệ</a>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <!-- Logo -->
+    <a class="logo" href="index.html">
+      <div class="logo-main">Bio🌿</div>
+      <div class="logo-sub">BIOWRAPS VIETNAM</div>
+    </a>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Tìm túi sinh học, bao bì compostable, màng bọc thực phẩm..."
+      />
+      <button onclick="doSearch()">Tìm kiếm</button>
+    </div>
+
+    <!-- Actions -->
+    <div class="header-actions">
+
+      <!-- Profile -->
+      <div class="action-item" onclick="goToProfile()">
+        <div class="user-avatar" id="userIcon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <span id="userLabel">Tài khoản</span>
+      </div>
+
+      <!-- Wishlist -->
+      <div class="action-item">
+        <div class="icon-c">❤️</div>
+        <span>Yêu thích</span>
+      </div>
+
+      <!-- Cart -->
+      <div class="action-item" onclick="openCart()">
+        <div class="icon-c cart-icon-wrap">
+          🛒
+          <span class="badge" id="cartBadge" style="display:none">0</span>
+        </div>
+        <span>Giỏ hàng</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" role="navigation">
+  <div class="nav-inner">
+    <a href="#" class="nav-item">📦 Bao Bì Thực Phẩm</a>
+    <a href="#" class="nav-item">🍊 Bio Wraps</a>
+    <a href="#" class="nav-item">🗑️ Túi Rác Sinh Học</a>
+    <a href="#" class="nav-item">🧪 Nguyên Liệu Sinh Học</a>
+    <a href="#" class="nav-item">💡 Công Nghệ FreshSense</a>
+    <a href="#" class="nav-item">🌏 Đối Tác B2B</a>
+    <a href="#" class="nav-item hot">🔥 Sản Phẩm Mới</a>
+  </div>
+</nav>

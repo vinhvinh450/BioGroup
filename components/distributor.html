@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Nhà Phân Phối — BioWraps Vietnam</title>
+  <base href="../" />
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+  <link rel="stylesheet" href="css/cart.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+
+  <style>
+    .dist-wrap { max-width: 960px; margin: 28px auto; padding: 0 16px; }
+    .dist-header {
+      background: linear-gradient(135deg, #1a7a3c, #25a356);
+      border-radius: 14px; padding: 24px 28px;
+      color: #fff; margin-bottom: 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .dist-header-icon { font-size: 40px; }
+    .dist-header-info h2 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .dist-header-info p  { font-size: 13px; opacity: .8; }
+    .dist-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+    .dist-stat {
+      background: #fff; border-radius: 12px; padding: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07); text-align: center;
+    }
+    .dist-stat .val { font-size: 28px; font-weight: 800; color: #1a7a3c; }
+    .dist-stat .lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.07); margin-bottom: 20px; }
+    .panel-head {
+      padding: 16px 20px; border-bottom: 1px solid #eee;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel-title { font-size: 15px; font-weight: 700; }
+    .panel-body { padding: 16px 20px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: #f6f8f7; padding: 10px 12px; text-align: left; font-weight: 600; color: #555; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700;
+    }
+    .badge-pending  { background: #fff3cd; color: #856404; }
+    .badge-approved { background: #d4edda; color: #155724; }
+    .badge-rejected { background: #f8d7da; color: #721c24; }
+    .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; transition: .15s; }
+    .btn-primary { background: #1a7a3c; color: #fff; }
+    .btn-primary:hover { background: #155c2d; }
+    .btn-danger  { background: #dc3545; color: #fff; }
+    .btn-danger:hover { background: #b02a37; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn-ghost { background: #f0f0f0; color: #333; }
+    .btn-ghost:hover { background: #e0e0e0; }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:2000; align-items:center; justify-content:center; }
+    .modal-overlay.show { display:flex; }
+    .modal { background:#fff; border-radius:14px; padding:28px; width:90%; max-width:500px; }
+    .modal-title { font-size:16px; font-weight:800; margin-bottom:20px; }
+    .form-field { margin-bottom:14px; }
+    .form-field label { display:block; font-size:12px; font-weight:600; color:#555; margin-bottom:5px; }
+    .form-field input, .form-field textarea, .form-field select {
+      width:100%; padding:9px 12px; border:1.5px solid #e0e0e0; border-radius:8px;
+      font-size:13px; font-family:inherit; outline:none; transition:.15s;
+    }
+    .form-field input:focus, .form-field textarea:focus { border-color:#25a356; }
+    .form-field textarea { resize:vertical; min-height:80px; }
+    .modal-foot { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+    .empty-state { text-align:center; padding:40px; color:#aaa; }
+    .empty-state .es-icon { font-size:40px; margin-bottom:10px; }
+    .admin-note { font-size:12px; color:#e53935; margin-top:4px; font-style:italic; }
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+      background:#1a7a3c; color:#fff; padding:10px 24px; border-radius:8px;
+      font-size:13px; font-weight:600; opacity:0; transition:.3s; pointer-events:none; z-index:9999; }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+<div id="comp-header"></div>
+<div class="toast" id="toast"></div>
+
+<div class="dist-wrap">
+  <div class="dist-header">
+    <div class="dist-header-icon">🏪</div>
+    <div class="dist-header-info">
+      <h2 id="distBizName">Dashboard Nhà Phân Phối</h2>
+      <p id="distBizInfo">Quản lý sản phẩm của bạn</p>
+    </div>
+  </div>
+
+  <div class="dist-stats">
+    <div class="dist-stat"><div class="val" id="statTotal">0</div><div class="lbl">Tổng sản phẩm</div></div>
+    <div class="dist-stat"><div class="val" id="statApproved" style="color:#25a356">0</div><div class="lbl">Đã duyệt</div></div>
+    <div class="dist-stat"><div class="val" id="statPending" style="color:#e8890c">0</div><div class="lbl">Chờ duyệt</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-title">📦 Sản phẩm của tôi</div>
+      <button class="btn btn-primary btn-sm" onclick="openAddProduct()">+ Thêm sản phẩm</button>
+    </div>
+    <div class="panel-body">
+      <table>
+        <thead><tr><th>Sản phẩm</th><th>Danh mục</th><th>Giá</th><th>Tồn kho</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+        <tbody id="myProductsBody"><tr><td colspan="6" style="text-align:center;color:#aaa;padding:30px">⏳ Đang tải...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL thêm/sửa sản phẩm -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-title" id="productModalTitle">➕ Thêm sản phẩm mới</div>
+    <input type="hidden" id="pId" />
+    <div class="form-field"><label>Tên sản phẩm *</label><input type="text" id="pName" placeholder="Tên sản phẩm..." /></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-field"><label>Danh mục</label><input type="text" id="pCategory" placeholder="Ví dụ: Bio Wraps..." /></div>
+      <div class="form-field"><label>Icon (emoji)</label><input type="text" id="pIcon" placeholder="📦" maxlength="4" /></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-field"><label>Giá (VNĐ) *</label><input type="number" id="pPrice" placeholder="0" min="0" /></div>
+      <div class="form-field"><label>Tồn kho *</label><input type="number" id="pStock" placeholder="0" min="0" /></div>
+    </div>
+    <div class="form-field"><label>Mô tả</label><textarea id="pDesc" placeholder="Mô tả sản phẩm..."></textarea></div>
+    <div class="form-field"><label>URL hình ảnh</label><input type="url" id="pImage" placeholder="https://..." /></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeProductModal()">Hủy</button>
+      <button class="btn btn-primary" onclick="saveProduct()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const _BASE = 'http://localhost:5207/api/distributor';
+const _token = localStorage.getItem('token');
+
+function _headers() {
+  return { 'Authorization': 'Bearer ' + _token, 'Content-Type': 'application/json' };
+}
+
+function isTokenExpired(t) {
+  try { const p = JSON.parse(atob(t.split('.')[1])); return p.exp * 1000 < Date.now(); } catch { return true; }
+}
+
+// Auth guard
+(function() {
+  if (!_token || isTokenExpired(_token)) { window.location.href = '../index.html#login'; throw 0; }
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (user.role !== 'Distributor') { window.location.href = '../index.html'; throw 0; }
+})();
+
+let _myProducts = [];
+
+async function loadMyProfile() {
+  try {
+    const res = await fetch(_BASE + '/me', { headers: _headers() });
+    if (!res.ok) return;
+    const p = await res.json();
+    document.getElementById('distBizName').textContent = p.businessName || 'Dashboard';
+    document.getElementById('distBizInfo').textContent = p.businessAddress || '';
+  } catch {}
+}
+
+async function loadMyProducts() {
+  try {
+    const res = await fetch(_BASE + '/products', { headers: _headers() });
+    if (!res.ok) { document.getElementById('myProductsBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#e53935">Không tải được sản phẩm</td></tr>'; return; }
+    _myProducts = await res.json();
+    renderProducts();
+  } catch {
+    document.getElementById('myProductsBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#e53935">Lỗi kết nối</td></tr>';
+  }
+}
+
+function renderProducts() {
+  document.getElementById('statTotal').textContent    = _myProducts.length;
+  document.getElementById('statApproved').textContent = _myProducts.filter(p => p.status === 'Approved').length;
+  document.getElementById('statPending').textContent  = _myProducts.filter(p => p.status === 'Pending').length;
+
+  const body = document.getElementById('myProductsBody');
+  if (!_myProducts.length) {
+    body.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="es-icon">📦</div><div>Chưa có sản phẩm nào.<br>Nhấn <b>+ Thêm sản phẩm</b> để bắt đầu.</div></div></td></tr>';
+    return;
+  }
+  const statusMap = { Pending: 'badge-pending', Approved: 'badge-approved', Rejected: 'badge-rejected' };
+  const statusLabel = { Pending: '⏳ Chờ duyệt', Approved: '✅ Đã duyệt', Rejected: '❌ Bị từ chối' };
+  body.innerHTML = _myProducts.map(p => `
+    <tr>
+      <td><b>${p.name}</b></td>
+      <td>${p.category}</td>
+      <td>${(p.price||0).toLocaleString('vi-VN')}đ</td>
+      <td>${p.stock}</td>
+      <td>
+        <span class="badge ${statusMap[p.status] || ''}">${statusLabel[p.status] || p.status}</span>
+        ${p.adminNote ? `<div class="admin-note">💬 ${p.adminNote}</div>` : ''}
+      </td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="openEditProduct(${p.id})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})" style="margin-left:4px">🗑️</button>
+      </td>
+    </tr>`).join('');
+}
+
+function openAddProduct() {
+  document.getElementById('pId').value = '';
+  document.getElementById('pName').value = '';
+  document.getElementById('pCategory').value = '';
+  document.getElementById('pIcon').value = '📦';
+  document.getElementById('pPrice').value = '';
+  document.getElementById('pStock').value = '';
+  document.getElementById('pDesc').value = '';
+  document.getElementById('pImage').value = '';
+  document.getElementById('productModalTitle').textContent = '➕ Thêm sản phẩm mới';
+  document.getElementById('productModal').classList.add('show');
+}
+
+function openEditProduct(id) {
+  const p = _myProducts.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('pId').value       = p.id;
+  document.getElementById('pName').value     = p.name;
+  document.getElementById('pCategory').value = p.category;
+  document.getElementById('pIcon').value     = p.icon || '📦';
+  document.getElementById('pPrice').value    = p.price;
+  document.getElementById('pStock').value    = p.stock;
+  document.getElementById('pDesc').value     = p.description;
+  document.getElementById('pImage').value    = p.imageUrl || '';
+  document.getElementById('productModalTitle').textContent = '✏️ Sửa sản phẩm';
+  document.getElementById('productModal').classList.add('show');
+}
+
+function closeProductModal() { document.getElementById('productModal').classList.remove('show'); }
+
+async function saveProduct() {
+  const id    = document.getElementById('pId').value;
+  const name  = document.getElementById('pName').value.trim();
+  const price = parseFloat(document.getElementById('pPrice').value);
+  const stock = parseInt(document.getElementById('pStock').value);
+  if (!name) { showToast('⚠️ Vui lòng nhập tên sản phẩm'); return; }
+  if (isNaN(price) || price < 0) { showToast('⚠️ Giá không hợp lệ'); return; }
+
+  const body = {
+    name, price, stock: isNaN(stock) ? 0 : stock,
+    category:    document.getElementById('pCategory').value.trim(),
+    icon:        document.getElementById('pIcon').value.trim() || '📦',
+    description: document.getElementById('pDesc').value.trim(),
+    imageUrl:    document.getElementById('pImage').value.trim() || null
+  };
+
+  const url    = id ? `${_BASE}/products/${id}` : `${_BASE}/products`;
+  const method = id ? 'PUT' : 'POST';
+
+  try {
+    const res  = await fetch(url, { method, headers: _headers(), body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!res.ok) { showToast('❌ ' + (data.message || 'Lỗi lưu sản phẩm')); return; }
+    closeProductModal();
+    showToast(id ? '✅ Đã cập nhật sản phẩm, chờ admin duyệt lại.' : '✅ Đã gửi sản phẩm, chờ admin duyệt.');
+    loadMyProducts();
+  } catch { showToast('❌ Lỗi kết nối server'); }
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Xóa sản phẩm này?')) return;
+  try {
+    const res = await fetch(`${_BASE}/products/${id}`, { method: 'DELETE', headers: _headers() });
+    if (res.ok) { showToast('🗑️ Đã xóa sản phẩm'); loadMyProducts(); }
+    else showToast('❌ Không xóa được');
+  } catch { showToast('❌ Lỗi kết nối'); }
+}
+
+let _toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// Load header
+(async function() {
+  const res = await fetch('components/header.html');
+  document.getElementById('comp-header').innerHTML = await res.text();
+  const saved = JSON.parse(localStorage.getItem('user') || '{}');
+  if (saved.name && typeof _setLoggedIn === 'function') _setLoggedIn(saved.name);
+})();
+
+loadMyProfile();
+loadMyProducts();
+</script>
+</body>
+</html>

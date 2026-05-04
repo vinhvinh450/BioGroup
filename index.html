@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bio🌿 — BioWraps Vietnam</title>
+  <meta name="description" content="BioWraps Vietnam — Bao bì sinh học từ vỏ cam. An toàn thực phẩm, tự phân hủy 100%, bảo vệ môi trường." />
+
+  <!-- ===== CSS ===== -->
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/product.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+  <link rel="stylesheet" href="css/cart.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/chatbox.css" />
+</head>
+<body>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== COMPONENTS ===== -->
+  <div id="comp-modal"></div>
+  <div id="comp-cart"></div>
+  <div id="comp-header"></div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main">
+
+    <!-- HERO SECTION -->
+    <div class="hero-section">
+
+      <!-- Sidebar danh mục -->
+      <div class="sidebar-cats">
+        <div class="cat-item">📦 Bao Bì Thực Phẩm <span class="cat-arrow">›</span></div>
+        <div class="cat-item">🍊 Bio Wraps <span class="cat-arrow">›</span></div>
+        <div class="cat-item">🗑️ Túi Rác Sinh Học <span class="cat-arrow">›</span></div>
+        <div class="cat-item">👔 Túi Đựng Quần Áo <span class="cat-arrow">›</span></div>
+        <div class="cat-item">🏷️ Nhãn Dán Sinh Học <span class="cat-arrow">›</span></div>
+        <div class="cat-item">🧠 Màng Chỉ Báo <span class="cat-arrow">›</span></div>
+        <div class="cat-item">🌾 Nguyên Liệu Thô <span class="cat-arrow">›</span></div>
+        <div class="cat-item">♻️ Giải Pháp B2B <span class="cat-arrow">›</span></div>
+      </div>
+
+      <!-- Hero banner -->
+      <div class="hero-banner">
+        <div class="hero-bg">
+          <img src="images/hero-bg.png" alt="Bao bì sinh học từ vỏ cam" class="hero-img" />
+        </div>
+        <div class="hero-content">
+          <div class="hero-tag">🌿 ECO-FRIENDLY &amp; BIODEGRADABLE</div>
+          <h2>Bao Bì Sinh Học<br>Từ Vỏ Cam</h2>
+          <p>
+            Thay thế nhựa truyền thống bằng vật liệu<br>
+            tự phân hủy — An toàn cho thực phẩm &amp; hành tinh
+          </p>
+          <button class="hero-btn" onclick="scrollToProducts()">Khám phá ngay ›</button>
+        </div>
+      </div>
+
+      <!-- Promo mini cards -->
+      <div class="promo-side">
+        <div class="promo-mini">
+          <div class="pm-icon">♻️</div>
+          <div class="pm-label">100% Compostable</div>
+          <div class="pm-title">Tự phân hủy sinh học</div>
+          <div class="pm-tag">Chứng nhận Quốc tế</div>
+        </div>
+        <div class="promo-mini">
+          <div class="pm-icon">🍊</div>
+          <div class="pm-label">Từ vỏ cam tự nhiên</div>
+          <div class="pm-title">FreshSense Biofilm</div>
+          <div class="pm-tag">Công nghệ mới</div>
+        </div>
+        <div class="promo-mini">
+          <div class="pm-icon">🌊</div>
+          <div class="pm-label">Bảo vệ đại dương</div>
+          <div class="pm-title">Giảm rác thải nhựa</div>
+          <div class="pm-tag">ESG Impact</div>
+        </div>
+      </div>
+
+    </div><!-- /hero-section -->
+
+    <!-- TẤT CẢ SẢN PHẨM -->
+    <div id="productsAnchor"></div>
+    <div class="sec-head">
+      <div class="sec-title">🌱 Tất Cả Sản Phẩm</div>
+      <a href="https://www.biowrapsvietnam.com/product.html" target="_blank" class="see-all">
+        Xem trên website gốc ›
+      </a>
+    </div>
+    <div class="product-filters" id="productFilters"></div>
+    <div class="prod-grid" id="allProducts"></div>
+
+    <!-- FRESHSENSE BANNER -->
+    <div class="sec-divider">
+      <div>
+        <div class="divider-title">💡 Công Nghệ FreshSense</div>
+        <div class="divider-sub">
+          Màng sinh học thông minh — Theo dõi độ tươi thực phẩm bằng màu sắc.<br>
+          Giải pháp tiên phong cho bao bì thực phẩm thế hệ mới.
+        </div>
+      </div>
+      <button class="divider-btn" onclick="window.open('https://www.biowrapsvietnam.com','_blank')">
+        Tìm hiểu thêm ›
+      </button>
+    </div>
+
+    <!-- SẢN PHẨM NỔI BẬT -->
+    <div class="sec-head">
+      <div class="sec-title">⭐ Sản Phẩm Nổi Bật</div>
+      <span class="see-all" onclick="openCart()">Xem giỏ hàng ›</span>
+    </div>
+    <div class="prod-grid-4" id="featProducts"></div>
+
+  </div><!-- /main -->
+
+  <div id="comp-footer"></div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="js/main.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/product.js"></script>
+  <script src="js/chatbox.js"></script>
+
+  <script>
+    async function loadComponent(id, file) {
+      try {
+        const res = await fetch(file);
+        if (!res.ok) throw new Error('Not found');
+        const html = await res.text();
+        document.getElementById(id).innerHTML = html;
+      } catch(e) {
+        console.warn(`Không thể load component: ${file}`);
+      }
+    }
+
+    Promise.all([
+      loadComponent('comp-modal',  'components/modal.html'),
+      loadComponent('comp-cart',   'components/cart.html'),
+      loadComponent('comp-header', 'components/header.html'),
+      loadComponent('comp-footer', 'components/footer.html'),
+    ]).then(async () => {
+      console.log('✅ Components loaded');
+
+      /* ✅ Tải dữ liệu sản phẩm từ API */
+      try {
+        await loadProductsFromAPI();
+        console.log(`✅ Loaded ${PRODUCTS.length} products`);
+      } catch (e) {
+        console.error('❌ Error loading products:', e);
+      }
+
+      /* Load exchange rate — await để giá USD hiển thị đúng ngay */
+      await fetchExchangeRate();
+
+      /* Render sản phẩm */
+      if (PRODUCTS.length === 0) {
+        console.warn('⚠️ No products loaded, showing empty state');
+      }
+
+      const allProdContainer = document.getElementById('allProducts');
+      const featProdContainer = document.getElementById('featProducts');
+      
+      if (allProdContainer) {
+        if (PRODUCTS.length > 0) {
+          console.log('📦 Rendering all products...');
+          allProdContainer.innerHTML = PRODUCTS.map(makeProductCard).join('');
+        } else {
+          console.warn('⚠️ No products to render in allProducts');
+        }
+      } else {
+        console.warn('⚠️ allProducts container not found');
+      }
+      
+      if (featProdContainer) {
+        if (PRODUCTS.length > 0) {
+          const featured = PRODUCTS.filter(p => p.featured).slice(0, 4);
+          console.log(`⭐ Rendering ${featured.length} featured products`);
+          featProdContainer.innerHTML = featured.map(makeProductCard).join('');
+        }
+      } else {
+        console.warn('⚠️ featProducts container not found');
+      }
+
+      /* Render filters */
+      renderProductFilters();
+
+      /* Search */
+      const input = document.getElementById('searchInput');
+      if (input) {
+        input.addEventListener('keydown', e => {
+          if (e.key === 'Enter') doSearch();
+        });
+      }
+
+      /* Click outside modal */
+      const overlay = document.getElementById('loginOverlay');
+      if (overlay) {
+        overlay.addEventListener('click', e => {
+          if (e.target === overlay) closeLogin();
+        });
+      }
+
+      /* ✅ Kiểm tra token — cập nhật header sau khi load xong */
+      const token = localStorage.getItem('token');
+      if (token && !_isTokenExpired(token)) {
+        const saved = JSON.parse(localStorage.getItem('user') || '{}');
+        const name  = saved.name || 'User';
+        _setLoggedIn(name);
+      } else if (token) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+
+      /* Tự mở modal đăng nhập nếu redirect từ trang yêu cầu auth */
+      if (window.location.hash === '#login') {
+        history.replaceState(null, '', window.location.pathname);
+        openLogin();
+      }
+
+    }).catch(err => {
+      console.error('❌ Error in component loading:', err);
+    });
+  </script>
+
+</body>
+</html> 

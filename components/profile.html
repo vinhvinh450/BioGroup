@@ -1,0 +1,997 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hồ Sơ – BioWraps Vietnam</title>
+
+  <!-- Base URL: trở về thư mục gốc vì file nằm trong components/ -->
+  <base href="../" />
+
+  <!-- CSS dùng chung -->
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+  <link rel="stylesheet" href="css/cart.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+
+  <style>
+    /* =============================================
+       PROFILE PAGE – BioWraps Vietnam
+       ============================================= */
+
+    /* ---- Guard: ẩn content khi chưa xác nhận authentication ---- */
+    body.auth-guard { pointer-events: none; opacity: 0.5; }
+
+    .profile-wrap {
+      max-width: 1000px;
+      margin: 32px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ---- SIDEBAR ---- */
+    .profile-sidebar {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .profile-avatar-wrap {
+      background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+      padding: 28px 20px;
+      text-align: center;
+    }
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: 3px solid rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 12px;
+    }
+    .profile-username {
+      color: var(--white);
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    .profile-email-small {
+      color: rgba(255,255,255,0.75);
+      font-size: 12px;
+    }
+
+    .profile-menu {
+      padding: 8px 0;
+    }
+    .profile-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .profile-menu-item:hover {
+      background: var(--green-bg);
+      color: var(--green-main);
+    }
+    .profile-menu-item.active {
+      background: var(--green-pale);
+      color: var(--green-main);
+      border-left-color: var(--green-main);
+      font-weight: 600;
+    }
+    .profile-menu-item .mi-icon { font-size: 16px; width: 20px; text-align: center; }
+
+    .profile-logout {
+      margin: 8px 12px 12px;
+      width: calc(100% - 24px);
+      background: none;
+      border: 1px solid #ffcdd2;
+      color: var(--danger);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .profile-logout:hover { background: #ffebee; }
+
+    /* ---- MAIN PANEL ---- */
+    .profile-main { display: flex; flex-direction: column; gap: 20px; }
+
+    .profile-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: none;
+    }
+    .profile-card.active { display: block; }
+
+    .card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-body { padding: 24px; }
+
+    /* ---- THÔNG TIN CÁ NHÂN ---- */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .info-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+    }
+    .info-field input, .info-field select {
+      width: 100%;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: var(--white);
+    }
+    .info-field input:focus, .info-field select:focus {
+      outline: none;
+      border-color: var(--green-main);
+      box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+    }
+    .info-field input:read-only {
+      background: var(--green-bg);
+      color: var(--text-muted);
+    }
+    .info-field.full { grid-column: 1 / -1; }
+
+    .save-btn {
+      margin-top: 20px;
+      background: var(--green-main);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 11px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    .save-btn:hover { background: var(--green-dark); }
+
+    /* ---- ĐƠN HÀNG ---- */
+    .order-empty {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--text-hint);
+    }
+    .order-empty .oe-icon { font-size: 48px; margin-bottom: 12px; }
+    .order-empty .oe-title { font-size: 15px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+
+    .order-item {
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .order-item-head {
+      background: var(--green-bg);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+    .order-id { font-weight: 700; color: var(--green-dark); }
+    .order-date { color: var(--text-muted); font-size: 12px; }
+    .order-status {
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-pending    { background: #fff8e1; color: #f57f17; }
+    .status-processing { background: #e3f2fd; color: #1565c0; }
+    .status-shipped    { background: #e8f5e9; color: #2e7d32; }
+    .status-delivered  { background: #e8f5e9; color: #1b5e20; }
+    .status-cancelled  { background: #ffebee; color: #c62828; }
+
+    .order-item-body { padding: 14px 16px; }
+    .order-products { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+    .order-total { font-size: 13px; color: var(--green-main); font-weight: 600; }
+
+    /* ---- NÚT THEO DÕI ---- */
+    .order-track-btn {
+      background: none;
+      border: 1px solid var(--green-main);
+      color: var(--green-main);
+      border-radius: var(--radius-sm);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .order-track-btn:hover { background: var(--green-main); color: var(--white); }
+
+    /* ---- MODAL TRACKING ---- */
+    .tracking-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none; align-items: center; justify-content: center;
+      z-index: 1000; padding: 20px;
+    }
+    .tracking-overlay.show { display: flex; }
+    .tracking-modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      width: 100%; max-width: 480px;
+      max-height: 80vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp { from { opacity:0; transform: translateY(16px); } }
+    .tracking-modal-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; background: var(--white); z-index: 1;
+    }
+    .tracking-modal-title { font-size: 15px; font-weight: 700; color: var(--green-dark); }
+    .tracking-modal-close {
+      background: none; border: none; font-size: 20px;
+      cursor: pointer; color: var(--text-muted); line-height: 1;
+    }
+    .tracking-modal-body { padding: 20px; }
+    .tracking-order-meta {
+      background: var(--green-bg);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+    .tracking-order-meta p { margin-bottom: 4px; color: var(--text-secondary); }
+    .tracking-order-meta p:last-child { margin-bottom: 0; }
+    .tracking-order-meta strong { color: var(--text-primary); }
+
+    /* ---- TIMELINE ---- */
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 9px; top: 8px; bottom: 8px;
+      width: 2px; background: var(--border-light);
+    }
+    .timeline-item { position: relative; margin-bottom: 20px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute; left: -24px; top: 2px;
+      width: 14px; height: 14px;
+      border-radius: 50%; border: 2px solid var(--white);
+      box-shadow: 0 0 0 2px var(--border-light);
+      background: var(--text-hint);
+      font-size: 0;
+    }
+    .timeline-dot.done { background: var(--green-main); box-shadow: 0 0 0 2px var(--green-main); }
+    .timeline-dot.cancelled { background: #e53935; box-shadow: 0 0 0 2px #e53935; }
+    .timeline-status { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+    .timeline-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; }
+    .timeline-time { font-size: 11px; color: var(--text-hint); }
+    .tracking-empty { text-align: center; padding: 32px 0; color: var(--text-muted); font-size: 13px; }
+
+    /* ---- ĐỔI MẬT KHẨU ---- */
+    .password-form { max-width: 420px; }
+    .password-form .info-field { margin-bottom: 14px; }
+
+    /* ---- LOADING STATE ---- */
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-sm);
+      height: 16px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      .profile-wrap { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+      .profile-menu { display: flex; overflow-x: auto; padding: 4px; gap: 4px; }
+      .profile-menu-item { white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; padding: 10px 14px; }
+      .profile-menu-item.active { border-bottom-color: var(--green-main); border-left: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Components -->
+  <div id="comp-modal"></div>
+  <div id="comp-cart"></div>
+  <div id="comp-header"></div>
+
+  <!-- ===== PROFILE CONTENT ===== -->
+  <div class="profile-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="profile-sidebar">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar" id="profileAvatar">👤</div>
+        <div class="profile-username" id="profileName">Đang tải...</div>
+        <div class="profile-email-small" id="profileEmailSmall">—</div>
+      </div>
+
+      <nav class="profile-menu">
+        <div class="profile-menu-item active" onclick="showTab('info', this)">
+          <span class="mi-icon">👤</span> Thông tin cá nhân
+        </div>
+        <div class="profile-menu-item" onclick="showTab('orders', this)">
+          <span class="mi-icon">📦</span> Đơn hàng của tôi
+        </div>
+        <div class="profile-menu-item" onclick="showTab('password', this)">
+          <span class="mi-icon">🔒</span> Đổi mật khẩu
+        </div>
+        <div class="profile-menu-item" onclick="showTab('address', this)">
+          <span class="mi-icon">📍</span> Địa chỉ giao hàng
+        </div>
+        <div class="profile-menu-item" onclick="showTab('distributor', this)" id="distMenuItem">
+          <span class="mi-icon">🏪</span> Nhà phân phối
+        </div>
+      </nav>
+
+      <button class="profile-logout" onclick="handleLogout()">🚪 Đăng xuất</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="profile-main">
+
+      <!-- Tab: Thông tin cá nhân -->
+      <div class="profile-card active" id="tab-info">
+        <div class="card-header">
+          <div class="card-title">👤 Thông Tin Cá Nhân</div>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-field">
+              <label>Họ và tên</label>
+              <input type="text" id="fieldName" placeholder="Nguyễn Văn A" />
+            </div>
+            <div class="info-field">
+              <label>Email</label>
+              <input type="email" id="fieldEmail" placeholder="email@example.com" readonly />
+            </div>
+            <div class="info-field">
+              <label>Số điện thoại</label>
+              <input type="tel" id="fieldPhone" placeholder="0901 234 567" />
+            </div>
+            <div class="info-field">
+              <label>Ngày tham gia</label>
+              <input type="text" id="fieldJoined" readonly />
+            </div>
+            <div class="info-field full">
+              <label>Địa chỉ</label>
+              <input type="text" id="fieldAddress" placeholder="Số nhà, đường, quận, thành phố..." />
+            </div>
+          </div>
+          <button class="save-btn" onclick="saveProfile()">💾 Lưu thay đổi</button>
+        </div>
+      </div>
+
+      <!-- Tab: Đơn hàng -->
+      <div class="profile-card" id="tab-orders">
+        <div class="card-header">
+          <div class="card-title">📦 Đơn Hàng Của Tôi</div>
+        </div>
+        <div class="card-body" id="ordersBody">
+          <div class="order-empty">
+            <div class="oe-icon">🔭</div>
+            <div class="oe-title">Chưa có đơn hàng nào</div>
+            <div>Hãy thêm sản phẩm vào giỏ và đặt hàng!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Đổi mật khẩu -->
+      <div class="profile-card" id="tab-password">
+        <div class="card-header">
+          <div class="card-title">🔒 Đổi Mật Khẩu</div>
+        </div>
+        <div class="card-body">
+          <div class="password-form">
+            <div class="info-field">
+              <label>Mật khẩu hiện tại</label>
+              <input type="password" id="pwCurrent" placeholder="Nhập mật khẩu hiện tại" />
+            </div>
+            <div class="info-field">
+              <label>Mật khẩu mới</label>
+              <input type="password" id="pwNew" placeholder="Tối thiểu 8 ký tự" />
+            </div>
+            <div class="info-field">
+              <label>Xác nhận mật khẩu mới</label>
+              <input type="password" id="pwConfirm" placeholder="Nhập lại mật khẩu mới" />
+            </div>
+            <button class="save-btn" onclick="changePassword()">🔒 Cập nhật mật khẩu</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Địa chỉ -->
+      <div class="profile-card" id="tab-address">
+        <div class="card-header">
+          <div class="card-title">📍 Địa Chỉ Giao Hàng</div>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-field">
+              <label>Họ tên người nhận</label>
+              <input type="text" id="addrName" placeholder="Nguyễn Văn A" />
+            </div>
+            <div class="info-field">
+              <label>Số điện thoại</label>
+              <input type="tel" id="addrPhone" placeholder="0901 234 567" />
+            </div>
+            <div class="info-field full">
+              <label>Địa chỉ chi tiết</label>
+              <input type="text" id="addrStreet" placeholder="Số nhà, tên đường..." />
+            </div>
+            <div class="info-field">
+              <label>Quận / Huyện</label>
+              <input type="text" id="addrDistrict" placeholder="Quận 1" />
+            </div>
+            <div class="info-field">
+              <label>Tỉnh / Thành phố</label>
+              <input type="text" id="addrCity" placeholder="TP. Hồ Chí Minh" />
+            </div>
+          </div>
+          <button class="save-btn" onclick="saveAddress()">💾 Lưu địa chỉ</button>
+        </div>
+      </div>
+
+      <!-- Tab: Nhà phân phối -->
+      <div class="profile-card" id="tab-distributor">
+        <div class="card-header">
+          <div class="card-title">🏪 Nhà Phân Phối</div>
+        </div>
+        <div class="card-body" id="distCardBody">
+          <div style="text-align:center;padding:20px;color:#aaa">⏳ Đang tải...</div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /profile-wrap -->
+
+  <div id="comp-footer"></div>
+
+  <!-- JS chung -->
+  <script src="js/main.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+
+  <script>
+    /* =============================================
+       PROFILE PAGE LOGIC
+       ============================================= */
+
+    const _profileToken = localStorage.getItem('token');
+    const _profileAuthApi   = window.AUTH_API_URL   || 'http://localhost:5207/api/auth';
+    const _profileOrdersApi = window.ORDERS_API_URL || 'http://localhost:5207/api/orders';
+
+    // ---- Kiểm tra đăng nhập ----
+    let isAuthenticated = false;
+    
+    if (!_profileToken) {
+      // Không có token → redirect ngay
+      window.location.href = '../index.html';
+    } else {
+      // Có token → xác nhận token hợp lệ qua API
+      document.body.classList.add('auth-guard'); // Ẩn content tạm thời
+      
+      // Xác nhận token hợp lệ
+      (async () => {
+        try {
+          const res = await fetch(_profileAuthApi + '/me', {
+            headers: { 'Authorization': 'Bearer ' + _profileToken }
+          });
+          
+          if (res.status === 401 || !res.ok) {
+            // Token hết hạn hoặc không hợp lệ → clear và redirect
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '../index.html';
+            return;
+          }
+
+          // Token hợp lệ
+          isAuthenticated = true;
+          loadProfile(); // Load profile ngay khi xác nhận
+
+        } catch (err) {
+          // Lỗi mạng → kiểm tra token local, nếu hết hạn thì redirect
+          console.error('Auth check error:', err);
+          if (!_profileToken || _isTokenExpired(_profileToken)) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '../index.html';
+            return;
+          }
+          // Server offline nhưng token còn hạn → cho vào tạm
+          isAuthenticated = true;
+          loadProfile();
+        } finally {
+          // Xóa guard
+          document.body.classList.remove('auth-guard');
+        }
+      })();
+    }
+
+    // ---- Tab switching ----
+    function showTab(tab, el) {
+      document.querySelectorAll('.profile-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.profile-menu-item').forEach(i => i.classList.remove('active'));
+
+      document.getElementById('tab-' + tab).classList.add('active');
+      el.classList.add('active');
+
+      if (tab === 'orders')      loadOrders();
+      if (tab === 'distributor') loadDistributorTab();
+    }
+
+    // ---- Tải thông tin user ----
+    async function loadProfile() {
+      try {
+        const res = await fetch(_profileAuthApi + '/me', {
+          headers: { 'Authorization': 'Bearer ' + _profileToken }
+        });
+
+        if (res.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '../index.html';
+          return;
+        }
+
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const raw = await res.json();
+
+        // Chuẩn hóa: .NET có thể trả PascalCase hoặc camelCase
+        const user = {
+          name:      raw.name      || raw.Name      || '',
+          email:     raw.email     || raw.Email     || '',
+          phone:     raw.phone     || raw.Phone     || '',
+          address:   raw.address   || raw.Address   || '',
+          createdAt: raw.createdAt || raw.CreatedAt || null,
+        };
+
+        // Điền vào sidebar
+        document.getElementById('profileName').textContent       = user.name  || '—';
+        document.getElementById('profileEmailSmall').textContent = user.email || '—';
+        document.getElementById('profileAvatar').textContent     = user.name ? user.name[0].toUpperCase() : '👤';
+
+        // Điền vào form
+        document.getElementById('fieldName').value    = user.name;
+        document.getElementById('fieldEmail').value   = user.email;
+        document.getElementById('fieldPhone').value   = user.phone;
+        document.getElementById('fieldAddress').value = user.address;
+        document.getElementById('fieldJoined').value  = user.createdAt
+          ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '—';
+
+      } catch (err) {
+        console.error('loadProfile error:', err);
+        showToast('❌ Không thể tải thông tin hồ sơ');
+      }
+    }
+
+    // ---- Lưu thông tin ----
+    async function saveProfile() {
+      const body = {
+        name:    document.getElementById('fieldName').value.trim(),
+        phone:   document.getElementById('fieldPhone').value.trim(),
+        address: document.getElementById('fieldAddress').value.trim(),
+      };
+
+      try {
+        const res = await fetch(_profileAuthApi + '/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + _profileToken
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) throw new Error();
+        showToast('✅ Đã lưu thông tin thành công!');
+        document.getElementById('profileName').textContent = body.name;
+
+      } catch {
+        showToast('❌ Lưu thất bại. Vui lòng thử lại!');
+      }
+    }
+
+    // ---- Đổi mật khẩu ----
+    async function changePassword() {
+      const current = document.getElementById('pwCurrent').value.trim();
+      const newPw   = document.getElementById('pwNew').value.trim();
+      const confirm = document.getElementById('pwConfirm').value.trim();
+
+      if (!current || !newPw || !confirm) {
+        showToast('⚠️ Vui lòng nhập đầy đủ thông tin'); return;
+      }
+      if (newPw !== confirm) {
+        showToast('⚠️ Mật khẩu xác nhận không khớp'); return;
+      }
+      if (newPw.length < 8) {
+        showToast('⚠️ Mật khẩu mới tối thiểu 8 ký tự'); return;
+      }
+
+      try {
+        const res = await fetch(_profileAuthApi + '/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + _profileToken
+          },
+          body: JSON.stringify({ currentPassword: current, newPassword: newPw })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          showToast('❌ ' + (err.message || 'Đổi mật khẩu thất bại')); return;
+        }
+
+        showToast('✅ Đổi mật khẩu thành công!');
+        ['pwCurrent','pwNew','pwConfirm'].forEach(id => document.getElementById(id).value = '');
+
+      } catch {
+        showToast('❌ Không thể kết nối server!');
+      }
+    }
+
+    // ---- Lưu địa chỉ ----
+    function saveAddress() {
+      const addr = [
+        document.getElementById('addrStreet').value.trim(),
+        document.getElementById('addrDistrict').value.trim(),
+        document.getElementById('addrCity').value.trim()
+      ].filter(Boolean).join(', ');
+
+      document.getElementById('fieldAddress').value = addr;
+      saveProfile();
+    }
+
+    // ---- Tải đơn hàng ----
+    async function loadOrders() {
+      const body = document.getElementById('ordersBody');
+      body.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa">⏳ Đang tải đơn hàng...</div>';
+
+      try {
+        const res = await fetch(_profileOrdersApi, {
+          headers: { 'Authorization': 'Bearer ' + _profileToken }
+        });
+
+        if (!res.ok) throw new Error();
+        const orders = await res.json();
+
+        if (!orders.length) {
+          body.innerHTML = `
+            <div class="order-empty">
+              <div class="oe-icon">🔭</div>
+              <div class="oe-title">Chưa có đơn hàng nào</div>
+              <div>Hãy thêm sản phẩm vào giỏ và đặt hàng!</div>
+            </div>`;
+          return;
+        }
+
+        const statusMap = {
+          'Pending':    ['status-pending',    'Chờ xử lý'],
+          'Confirmed':  ['status-processing', 'Đã xác nhận'],
+          'Processing': ['status-processing', 'Đang xử lý'],
+          'Shipped':    ['status-shipped',    'Đang giao'],
+          'Delivered':  ['status-delivered',  'Đã giao'],
+          'Cancelled':  ['status-cancelled',  'Đã hủy'],
+        };
+
+        body.innerHTML = orders.map(o => {
+          const status = o.status ?? o.Status;
+          const [cls, label] = statusMap[status] || ['status-pending', status || 'Chờ xử lý'];
+          const orderItems = o.items ?? o.orderItems ?? o.OrderItems ?? [];
+          const items = orderItems.map(i => i.productName || i.product?.name || 'Sản phẩm').join(', ') || '—';
+          const date  = new Date(o.createdAt ?? o.CreatedAt).toLocaleDateString('vi-VN');
+          return `
+            <div class="order-item">
+              <div class="order-item-head">
+                <div>
+                  <span class="order-id">#${o.id}</span>
+                  <span class="order-date"> · ${date}</span>
+                </div>
+                <span class="order-status ${cls}">${label}</span>
+              </div>
+              <div class="order-item-body">
+                <div class="order-products">📦 ${items}</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+                  <div class="order-total">💰 Liên hệ báo giá · ${orderItems.length} sản phẩm</div>
+                  <button class="order-track-btn" onclick="viewOrderTracking(${o.id})">🔍 Theo dõi</button>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+
+      } catch {
+        body.innerHTML = '<div style="text-align:center;padding:32px;color:#e53935">❌ Không thể tải đơn hàng</div>';
+      }
+    }
+
+    // ---- Đăng xuất ----
+    function handleLogout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      showToast('👋 Đã đăng xuất');
+      setTimeout(() => { window.location.href = '../index.html'; }, 1000);
+    }
+
+    /* =============================================
+       LOAD COMPONENTS & INIT
+       ============================================= */
+    async function loadComponent(id, file) {
+      try {
+        const res = await fetch(file);
+        if (!res.ok) return;
+        document.getElementById(id).innerHTML = await res.text();
+      } catch(e) {}
+    }
+
+    Promise.all([
+      loadComponent('comp-modal',  'components/modal.html'),
+      loadComponent('comp-cart',   'components/cart.html'),
+      loadComponent('comp-header', 'components/header.html'),
+      loadComponent('comp-footer', 'components/footer.html'),
+    ]).then(() => {
+      if (_profileToken) {
+        const saved = JSON.parse(localStorage.getItem('user') || '{}');
+        _setLoggedIn(saved.name || 'User');
+      }
+    });
+
+    // Profile sẽ được load trong hàm kiểm tra authentication ở trên
+
+    /* ---- NHÀA PHÂN PHỐI ---- */
+    const _DIST_API = 'http://localhost:5207/api/distributor';
+
+    async function loadDistributorTab() {
+      const body = document.getElementById('distCardBody');
+      body.innerHTML = '<div style="text-align:center;padding:20px;color:#aaa">⏳ Đang tải...</div>';
+      try {
+        const res = await fetch(_DIST_API + '/me', {
+          headers: { 'Authorization': 'Bearer ' + _profileToken }
+        });
+        if (res.status === 404) { renderDistRegisterForm(); return; }
+        const profile = await res.json();
+        renderDistStatus(profile);
+      } catch { renderDistRegisterForm(); }
+    }
+
+    function renderDistStatus(p) {
+      const body = document.getElementById('distCardBody');
+      const statusMap = {
+        Pending:  { color:'#e8890c', icon:'⏳', label:'Đang chờ duyệt' },
+        Approved: { color:'#1a7a3c', icon:'✅', label:'Đã được duyệt' },
+        Rejected: { color:'#dc3545', icon:'❌', label:'Đã bị từ chối' },
+      };
+      const s = statusMap[p.status] || statusMap.Pending;
+      body.innerHTML = `
+        <div style="background:${s.color}15;border:1.5px solid ${s.color}40;border-radius:10px;padding:20px;margin-bottom:20px">
+          <div style="font-size:22px;margin-bottom:6px">${s.icon} <b style="color:${s.color}">${s.label}</b></div>
+          <div style="font-size:13px;color:#555">
+            <b>Tên doanh nghiệp:</b> ${p.businessName}<br>
+            <b>Địa chỉ:</b> ${p.businessAddress || '—'}<br>
+            <b>MST:</b> ${p.taxCode || '—'}<br>
+            ${p.adminNote ? `<b>Ghi chú admin:</b> <i style="color:${s.color}">${p.adminNote}</i>` : ''}
+          </div>
+        </div>
+        ${p.status === 'Approved' ? `
+          <a href="components/distributor.html" class="save-btn" style="display:inline-block;text-decoration:none;text-align:center;padding:12px 28px;background:#1a7a3c;color:#fff;border-radius:8px;font-weight:700;font-size:14px">
+            🏪 Vào Dashboard Nhà Phân Phối →
+          </a>` : ''}
+        ${p.status === 'Rejected' ? `
+          <button class="save-btn" onclick="renderDistRegisterForm(true)" style="background:#e53935">
+            📝 Đăng ký lại
+          </button>` : ''}
+      `;
+    }
+
+    function renderDistRegisterForm(isReapply) {
+      const body = document.getElementById('distCardBody');
+      body.innerHTML = `
+        <div style="margin-bottom:20px;font-size:13px;color:#555;line-height:1.7">
+          Đăng ký trở thành nhà phân phối để đăng bán sản phẩm trên sàn BioWraps Vietnam.
+          Sau khi đăng ký, admin sẽ xét duyệt hồ sơ của bạn.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="info-field">
+            <label>Tên doanh nghiệp *</label>
+            <input type="text" id="dBizName" placeholder="Công ty TNHH..." />
+          </div>
+          <div class="info-field">
+            <label>Mã số thuế</label>
+            <input type="text" id="dTaxCode" placeholder="0123456789" />
+          </div>
+          <div class="info-field">
+            <label>Địa chỉ doanh nghiệp</label>
+            <input type="text" id="dBizAddr" placeholder="Số nhà, đường, tỉnh..." />
+          </div>
+          <div class="info-field">
+            <label>SĐT liên hệ</label>
+            <input type="tel" id="dPhone" placeholder="0901 234 567" />
+          </div>
+          <div class="info-field" style="grid-column:1/-1">
+            <label>Mô tả hoạt động kinh doanh</label>
+            <textarea id="dDesc" placeholder="Mô tả ngắn về sản phẩm/dịch vụ bạn muốn phân phối..." style="width:100%;padding:9px 12px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px"></textarea>
+          </div>
+        </div>
+        <button class="save-btn" onclick="submitDistApplication()" style="margin-top:16px">
+          📨 Gửi đơn đăng ký
+        </button>
+      `;
+    }
+
+    async function submitDistApplication() {
+      const bizName = document.getElementById('dBizName')?.value.trim();
+      if (!bizName) { showToast('⚠️ Vui lòng nhập tên doanh nghiệp'); return; }
+      const body = {
+        businessName:    bizName,
+        taxCode:         document.getElementById('dTaxCode')?.value.trim(),
+        businessAddress: document.getElementById('dBizAddr')?.value.trim(),
+        contactPhone:    document.getElementById('dPhone')?.value.trim(),
+        description:     document.getElementById('dDesc')?.value.trim(),
+      };
+      try {
+        const res  = await fetch(_DIST_API + '/apply', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + _profileToken, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) { showToast('❌ ' + (data.message || 'Lỗi gửi đơn')); return; }
+        showToast('✅ Đã gửi đơn đăng ký! Vui lòng chờ admin xét duyệt.');
+        loadDistributorTab();
+      } catch { showToast('❌ Lỗi kết nối server'); }
+    }
+  </script>
+
+  <!-- MODAL: THEO DÕI ĐƠN HÀNG -->
+  <div class="tracking-overlay" id="trackingOverlay">
+    <div class="tracking-modal">
+      <div class="tracking-modal-head">
+        <div class="tracking-modal-title">🔍 Theo dõi đơn hàng <span id="trackOrderId"></span></div>
+        <button class="tracking-modal-close" onclick="closeTrackingModal()">×</button>
+      </div>
+      <div class="tracking-modal-body">
+        <div class="tracking-order-meta" id="trackOrderMeta">
+          <p>⏳ Đang tải thông tin...</p>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--green-dark);margin-bottom:12px">📋 Lịch sử trạng thái</div>
+        <div class="timeline" id="trackTimeline">
+          <div class="tracking-empty">⏳ Đang tải...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const _trackStatusMap = {
+      'Pending':    ['⏳', 'Chờ xử lý'],
+      'Confirmed':  ['✓',  'Đã xác nhận'],
+      'Processing': ['⚙️', 'Đang xử lý'],
+      'Shipped':    ['🚚', 'Đang giao hàng'],
+      'Delivered':  ['✅', 'Đã giao thành công'],
+      'Cancelled':  ['❌', 'Đã hủy'],
+    };
+
+    async function viewOrderTracking(orderId) {
+      const overlay = document.getElementById('trackingOverlay');
+      document.getElementById('trackOrderId').textContent = '#' + orderId;
+      document.getElementById('trackOrderMeta').innerHTML = '<p>⏳ Đang tải thông tin...</p>';
+      document.getElementById('trackTimeline').innerHTML  = '<div class="tracking-empty">⏳ Đang tải...</div>';
+      overlay.classList.add('show');
+
+      const api   = _profileOrdersApi;
+      const token = _profileToken;
+      const headers = { 'Authorization': 'Bearer ' + token };
+
+      try {
+        // Tải thông tin đơn hàng và tracking song song
+        const [orderRes, trackRes] = await Promise.all([
+          fetch(api + '/' + orderId, { headers }),
+          fetch(api + '/' + orderId + '/tracking', { headers }),
+        ]);
+
+        // Hiển thị meta đơn hàng
+        if (orderRes.ok) {
+          const o = await orderRes.json();
+          const status  = o.status  ?? o.Status;
+          const [icon, label] = _trackStatusMap[status] || ['📦', status || '—'];
+          const address = o.shippingAddress ?? o.ShippingAddress ?? '—';
+          const date    = new Date(o.createdAt ?? o.CreatedAt).toLocaleString('vi-VN');
+          document.getElementById('trackOrderMeta').innerHTML = `
+            <p><strong>Trạng thái:</strong> ${icon} ${label}</p>
+            <p><strong>Địa chỉ giao:</strong> ${address}</p>
+            <p><strong>Ngày đặt:</strong> ${date}</p>
+          `;
+        }
+
+        // Hiển thị timeline
+        if (trackRes.ok) {
+          const history = await trackRes.json();
+          if (!history.length) {
+            document.getElementById('trackTimeline').innerHTML = '<div class="tracking-empty">Chưa có lịch sử cập nhật</div>';
+          } else {
+            document.getElementById('trackTimeline').innerHTML = history.map((item, i) => {
+              const s    = item.status      ?? item.Status;
+              const desc = item.description ?? item.Description ?? '';
+              const time = new Date(item.timestamp ?? item.Timestamp ?? item.createdAt ?? item.CreatedAt).toLocaleString('vi-VN');
+              const [icon, label] = _trackStatusMap[s] || ['📦', s || '—'];
+              const dotClass = s === 'Cancelled' ? 'cancelled' : (i === 0 ? 'done' : 'done');
+              return `
+                <div class="timeline-item">
+                  <div class="timeline-dot ${dotClass}"></div>
+                  <div class="timeline-status">${icon} ${label}</div>
+                  ${desc ? `<div class="timeline-desc">${desc}</div>` : ''}
+                  <div class="timeline-time">${time}</div>
+                </div>`;
+            }).join('');
+          }
+        } else {
+          document.getElementById('trackTimeline').innerHTML = '<div class="tracking-empty">Chưa có lịch sử cập nhật</div>';
+        }
+      } catch {
+        document.getElementById('trackTimeline').innerHTML = '<div class="tracking-empty" style="color:#e53935">❌ Không thể tải dữ liệu</div>';
+      }
+    }
+
+    function closeTrackingModal() {
+      document.getElementById('trackingOverlay').classList.remove('show');
+    }
+
+    // Đóng khi click ngoài modal
+    document.getElementById('trackingOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeTrackingModal();
+    });
+  </script>
+
+</body>
+</html>

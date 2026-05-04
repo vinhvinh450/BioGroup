@@ -1,0 +1,282 @@
+/* =============================================
+   HEADER.CSS — Header & Navigation Styles
+   BioWraps Vietnam Shop
+   ============================================= */
+
+/* Topbar */
+.topbar {
+  background: var(--green-dark);
+  color: var(--white);
+  font-size: 12px;
+  padding: 8px 0;
+}
+
+.topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar a {
+  color: var(--white);
+  margin-left: 16px;
+  text-decoration: none;
+}
+
+.topbar a:hover {
+  text-decoration: underline;
+}
+
+/* Header */
+.header {
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.logo-main {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--green-main);
+}
+
+.logo-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* Search */
+.search-wrap {
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  gap: 0;
+}
+
+.search-wrap input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid var(--border-mid);
+  border-right: none;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  font-size: 14px;
+}
+
+.search-wrap input:focus {
+  outline: none;
+  border-color: var(--green-main);
+}
+
+.search-wrap button {
+  padding: 10px 20px;
+  background: var(--green-main);
+  color: var(--white);
+  border: 1px solid var(--green-main);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-wrap button:hover {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  transition: background 0.2s;
+  gap: 4px;
+}
+
+.action-item:hover {
+  background: var(--green-bg);
+}
+
+.action-item span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Icon emoji chung */
+.icon-c {
+  font-size: 22px;
+  line-height: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+/* Cart wrapper + badge */
+.cart-icon-wrap {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: #e53935;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* User avatar */
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--green-bg);
+  border: 2px solid var(--green-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-dark);
+  overflow: hidden;
+}
+
+.user-avatar svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--green-dark) !important;
+}
+
+.action-item:hover .user-avatar:not(.logged-in) svg {
+  stroke: var(--white) !important;
+}
+
+.action-item:hover .user-avatar {
+  border-color: var(--green-main);
+  background: var(--green-light);
+}
+
+.action-item:hover .user-avatar svg {
+  stroke: var(--white);
+}
+
+/* Trạng thái đã đăng nhập */
+.user-avatar.logged-in {
+  background: var(--green-main);
+  border-color: var(--green-main);
+  color: var(--white);
+  font-size: 15px;
+}
+
+.action-item:hover .user-avatar.logged-in {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+}
+
+/* Navigation */
+.nav {
+  background: var(--white);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  overflow-x: auto;
+}
+
+.nav-inner::-webkit-scrollbar {
+  height: 6px;
+}
+
+.nav-inner::-webkit-scrollbar-thumb {
+  background: var(--green-muted);
+  border-radius: 3px;
+}
+
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--green-pale);
+  color: var(--text-secondary);
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-item:hover {
+  background: var(--green-light);
+  color: var(--white);
+}
+
+.nav-item.active {
+  background: var(--green-main);
+  color: var(--white);
+}
+
+.nav-item.hot {
+  background: #fff4e5;
+  color: #bf360c;
+  border: 1px solid #ffd180;
+}
+
+/* =============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================= */
+@media (max-width: 600px) {
+  .header-inner { flex-wrap: wrap; gap: 10px; }
+  .search-wrap { order: 3; max-width: 100%; width: 100%; }
+}

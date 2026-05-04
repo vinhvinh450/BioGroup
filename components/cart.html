@@ -1,0 +1,415 @@
+<!--
+  components/cart.html
+  BioWraps Vietnam Shop — Slide-in Cart + Checkout Modal + Success Modal
+-->
+
+<!-- ===== SLIDE-IN CART PANEL ===== -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <h3>🛒 Giỏ hàng của bạn</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">
+      <span class="ce-icon">🌿</span>
+      <div class="ce-title">Giỏ hàng trống</div>
+      <div>Hãy thêm sản phẩm xanh vào giỏ!</div>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Tổng cộng</span>
+      <span class="cart-total-val" id="cartTotal">0 sản phẩm</span>
+    </div>
+    <button class="checkout-btn" onclick="doCheckout()">Tiến hành đặt hàng →</button>
+    <div class="cart-note">🌱 Mỗi đơn hàng góp phần bảo vệ môi trường</div>
+  </div>
+</div>
+
+<!-- ===== CHECKOUT MODAL ===== -->
+<div class="co-overlay" id="checkoutModal" onclick="if(event.target===this) closeCheckoutModal()">
+  <div class="co-modal">
+
+    <div class="co-modal-header">
+      <div class="co-modal-title">🧾 Xác nhận đơn hàng</div>
+      <button class="co-close" onclick="closeCheckoutModal()">✕</button>
+    </div>
+
+    <div class="co-modal-body">
+
+      <!-- Tóm tắt đơn hàng -->
+      <div class="co-section">
+        <div class="co-section-title">📦 Sản phẩm</div>
+        <div id="co-items"></div>
+        <div class="co-total-row">
+          <span>Tổng tiền</span>
+          <span class="co-total-val" id="co-total">0 ₫</span>
+        </div>
+      </div>
+
+      <!-- Địa chỉ giao hàng -->
+      <div class="co-section">
+        <div class="co-section-title">📍 Địa chỉ giao hàng</div>
+        <input class="co-input" id="co-address" type="text"
+          placeholder="Số nhà, đường, quận, thành phố..." />
+      </div>
+
+      <!-- Số điện thoại -->
+      <div class="co-section">
+        <div class="co-section-title">📞 Số điện thoại</div>
+        <input class="co-input" id="co-phone" type="tel"
+          placeholder="0901234567..." />
+      </div>
+
+      <!-- Ghi chú -->
+      <div class="co-section">
+        <div class="co-section-title">📝 Ghi chú (tuỳ chọn)</div>
+        <input class="co-input" id="co-note" type="text"
+          placeholder="Giao giờ hành chính, gọi trước khi giao..." />
+      </div>
+
+      <!-- Phương thức thanh toán -->
+      <div class="co-section">
+        <div class="co-section-title">💳 Phương thức thanh toán</div>
+        <div class="pm-grid">
+
+          <div class="pm-option active" data-method="COD" onclick="selectPayment('COD')">
+            <div class="pm-icon">💵</div>
+            <div class="pm-label">Tiền mặt</div>
+            <div class="pm-sub">COD khi nhận hàng</div>
+          </div>
+
+          <div class="pm-option" data-method="BankTransfer" onclick="selectPayment('BankTransfer')">
+            <div class="pm-icon">🏦</div>
+            <div class="pm-label">Chuyển khoản</div>
+            <div class="pm-sub">Ngân hàng nội địa</div>
+          </div>
+
+        </div>
+
+        <!-- QR Chuyển khoản VietQR -->
+        <div class="pm-detail" id="bank-info" style="display:none">
+          <div class="pm-detail-title">📷 Quét mã QR để chuyển khoản</div>
+          <div class="qr-wrap">
+            <div class="qr-loading" id="bank-qr-loading">⏳ Đang tạo mã QR...</div>
+            <img id="bank-qr-img" class="qr-img" style="display:none" alt="QR Chuyển khoản" />
+          </div>
+          <div class="pm-detail-row"><span>Ngân hàng</span><strong>Techcombank</strong></div>
+          <div class="pm-detail-row"><span>Số TK</span><strong>4548301004</strong></div>
+          <div class="pm-detail-row"><span>Chủ TK</span><strong>NGUYEN KHANH VINH</strong></div>
+          <div class="pm-detail-note">📱 Mở app ngân hàng → Quét mã → Kiểm tra số tiền và nội dung → Xác nhận</div>
+        </div>
+
+      </div>
+
+      <!-- Lỗi -->
+      <div class="co-error" id="co-error" style="display:none"></div>
+
+    </div>
+
+    <div class="co-modal-footer">
+      <button class="co-cancel-btn" onclick="closeCheckoutModal()">Quay lại giỏ hàng</button>
+      <button class="co-submit-btn" id="co-submit-btn" onclick="submitOrder()">✅ Xác nhận đặt hàng</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SUCCESS MODAL ===== -->
+<div class="co-overlay" id="orderSuccessModal" onclick="if(event.target===this) closeSuccessModal()">
+  <div class="co-modal co-modal--success">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Đặt hàng thành công!</div>
+    <div class="success-sub">Cảm ơn bạn đã tin tưởng BioWraps Vietnam 🌿</div>
+    <div class="success-detail">
+      <div class="success-row"><span>Mã đơn hàng</span><strong id="success-order-id">#0</strong></div>
+      <div class="success-row"><span>Thanh toán</span><strong id="success-method">—</strong></div>
+    </div>
+    <p class="success-note">Đội ngũ BioWraps sẽ liên hệ xác nhận đơn hàng trong vòng 30 phút.</p>
+    <div class="success-actions">
+      <button class="co-submit-btn" onclick="closeSuccessModal(); window.location.href='components/profile.html'">Xem đơn hàng</button>
+      <button class="co-cancel-btn" onclick="closeSuccessModal()">Tiếp tục mua sắm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CSS CHECKOUT ===== -->
+<style>
+/* ---- CHECKOUT OVERLAY ---- */
+.co-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+}
+.co-overlay.show { display: flex; animation: coFadeIn .2s ease; }
+@keyframes coFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.co-modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+  animation: coSlideUp .25s ease;
+}
+@keyframes coSlideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ---- HEADER ---- */
+.co-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+.co-modal-title { font-size: 17px; font-weight: 700; color: #1a1a1a; }
+.co-close {
+  background: none; border: none; font-size: 18px;
+  color: #999; cursor: pointer; padding: 4px 8px;
+  border-radius: 6px; transition: background .15s;
+}
+.co-close:hover { background: #f5f5f5; color: #333; }
+
+/* ---- BODY ---- */
+.co-modal-body {
+  overflow-y: auto;
+  padding: 16px 22px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.co-section { display: flex; flex-direction: column; gap: 8px; }
+.co-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: #888;
+}
+
+/* ---- ORDER ITEMS ---- */
+.co-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f8fdf8;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.co-item-name { color: #2d6a2d; font-weight: 500; }
+.co-item-meta { color: #666; white-space: nowrap; margin-left: 8px; }
+
+.co-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #e8f5e9;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2e7d32;
+  margin-top: 4px;
+}
+.co-total-val { font-size: 16px; }
+
+/* ---- INPUT ---- */
+.co-input {
+  width: 100%;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #222;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+}
+.co-input:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 3px rgba(76,175,80,.12);
+}
+
+/* ---- PAYMENT OPTIONS ---- */
+.pm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.pm-option {
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  background: #fafafa;
+}
+.pm-option:hover { border-color: #81c784; background: #f1f8f1; }
+.pm-option.active {
+  border-color: #4caf50;
+  background: #e8f5e9;
+  box-shadow: 0 0 0 3px rgba(76,175,80,.15);
+}
+.pm-icon { font-size: 24px; margin-bottom: 6px; }
+.pm-label { font-size: 13px; font-weight: 700; color: #222; }
+.pm-sub { font-size: 11px; color: #888; margin-top: 2px; }
+
+.pm-detail {
+  background: #f8f9ff;
+  border: 1px solid #e3e8ff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 4px;
+  animation: coFadeIn .2s ease;
+}
+.pm-detail-title { font-size: 12px; font-weight: 700; color: #555; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+.pm-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,.05);
+}
+.pm-detail-row:last-of-type { border-bottom: none; }
+.pm-detail-row span { color: #888; }
+.pm-detail-row strong { color: #222; }
+.pm-detail-note { font-size: 11px; color: #e67e22; margin-top: 10px; }
+
+/* ---- ERROR ---- */
+.co-error {
+  background: #ffebee;
+  border-left: 3px solid #e53935;
+  color: #c62828;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+/* ---- FOOTER ---- */
+.co-modal-footer {
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+  border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+.co-cancel-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1.5px solid #ddd;
+  background: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #666;
+  cursor: pointer;
+  transition: all .2s;
+}
+.co-cancel-btn:hover { background: #f5f5f5; border-color: #bbb; }
+.co-submit-btn {
+  flex: 2;
+  padding: 12px;
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.co-submit-btn:hover { opacity: .9; }
+.co-submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ---- SPINNER ---- */
+.co-spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: coSpin .7s linear infinite;
+}
+@keyframes coSpin { to { transform: rotate(360deg); } }
+
+/* ---- SUCCESS MODAL ---- */
+.co-modal--success {
+  max-width: 400px;
+  padding: 36px 28px;
+  text-align: center;
+  align-items: center;
+}
+.success-icon { font-size: 56px; margin-bottom: 12px; }
+.success-title { font-size: 22px; font-weight: 800; color: #2e7d32; margin-bottom: 6px; }
+.success-sub { font-size: 14px; color: #666; margin-bottom: 20px; }
+.success-detail {
+  width: 100%;
+  background: #f8fdf8;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.success-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 6px 0;
+}
+.success-row span { color: #888; }
+.success-row strong { color: #222; }
+.success-note { font-size: 12px; color: #888; margin-bottom: 20px; line-height: 1.6; }
+.success-actions { display: flex; gap: 10px; width: 100%; }
+.success-actions .co-submit-btn,
+.success-actions .co-cancel-btn { flex: 1; }
+
+@media (max-width: 480px) {
+  .pm-grid { grid-template-columns: 1fr; }
+  .co-modal { max-height: 95vh; }
+  .success-actions { flex-direction: column; }
+}
+
+/* ---- QR CODE ---- */
+.qr-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0 8px;
+  min-height: 160px;
+}
+.qr-img {
+  width: 160px;
+  height: 160px;
+  border-radius: 8px;
+  border: 3px solid #e0e0e0;
+  display: block;
+}
+.qr-loading {
+  font-size: 13px;
+  color: #aaa;
+  text-align: center;
+}
+.qr-error {
+  font-size: 12px;
+  color: #e53935;
+  text-align: center;
+}
+</style>

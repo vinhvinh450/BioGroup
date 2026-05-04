@@ -1,0 +1,152 @@
+/* =============================================
+   MODAL.CSS — Login / Register overlay
+   BioWraps Vietnam Shop
+   ============================================= */
+
+/* ---- OVERLAY ---- */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.overlay.show { display: flex; }
+
+/* ---- MODAL BOX ---- */
+.modal {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  width: 380px;
+  max-width: 95%;
+  position: relative;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+}
+
+/* ---- CLOSE BUTTON ---- */
+.modal .close-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.modal .close-btn:hover { color: var(--text-primary); }
+
+/* ---- TABS ---- */
+.modal-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: 20px;
+}
+.modal-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+.modal-tab.active {
+  color: var(--green-main);
+  border-bottom-color: var(--green-main);
+}
+
+/* ---- FORM FIELDS ---- */
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.field input {
+  width: 100%;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+.field input:focus {
+  border-color: var(--green-main);
+  box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+}
+
+.forgot-link {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  color: var(--green-main);
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.forgot-link:hover { text-decoration: underline; }
+
+/* ---- SUBMIT BUTTON ---- */
+.modal-btn {
+  width: 100%;
+  background: var(--green-main);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.modal-btn:hover { background: var(--green-dark); }
+
+/* ---- DIVIDER ---- */
+.divider-or {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0;
+}
+.divider-or::before,
+.divider-or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-light);
+}
+.divider-or span {
+  font-size: 11px;
+  color: var(--text-hint);
+  font-weight: 600;
+}
+
+/* ---- GOOGLE BUTTON ---- */
+.google-btn {
+  width: 100%;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-size: 14px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.google-btn:hover { background: #f5f5f5; }

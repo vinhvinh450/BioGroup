@@ -1,0 +1,121 @@
+/* =============================================
+   BASE.CSS — Reset, Variables, Typography
+   BioWraps Vietnam Shop
+   ============================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --green-dark:    #1b5e20;
+  --green-main:    #2e7d32;
+  --green-mid:     #43a047;
+  --green-light:   #66bb6a;
+  --green-pale:    #e8f5e9;
+  --green-bg:      #f2f7f2;
+  --green-text:    #c8e6c9;
+  --green-muted:   #a5d6a7;
+
+  --text-primary:  #222222;
+  --text-secondary:#555555;
+  --text-muted:    #888888;
+  --text-hint:     #aaaaaa;
+
+  --border-light:  #f0f0f0;
+  --border-mid:    #dddddd;
+  --border-green:  #c8e6c9;
+
+  --white:         #ffffff;
+  --danger:        #e53935;
+
+  --radius-sm:     4px;
+  --radius-md:     8px;
+  --radius-lg:     12px;
+  --radius-pill:   24px;
+
+  --shadow-sm:     0 1px 6px rgba(0,0,0,0.07);
+  --shadow-md:     0 4px 16px rgba(0,0,0,0.12);
+  --shadow-lg:     0 8px 28px rgba(0,0,0,0.13);
+  --shadow-green:  0 4px 20px rgba(46,125,50,0.25);
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--green-bg);
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--green-dark);
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 9999;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: var(--green-muted); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--green-main); }
+
+/* Responsive grid helpers */
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* =============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================= */
+@media (max-width: 900px) {
+  .hero-section { grid-template-columns: 1fr !important; }
+  .sidebar-cats, .promo-side { display: none !important; }
+  .prod-grid { grid-template-columns: repeat(3,1fr) !important; }
+  .prod-grid-4 { grid-template-columns: repeat(2,1fr) !important; }
+  .trust-strip { grid-template-columns: 1fr !important; }
+  .cat-grid { grid-template-columns: repeat(2,1fr) !important; }
+  .footer-top { grid-template-columns: 1fr 1fr !important; }
+}
+
+@media (max-width: 600px) {
+  .header-inner { flex-wrap: wrap; gap: 10px; }
+  .search-wrap { order: 3; max-width: 100%; width: 100%; }
+  .prod-grid { grid-template-columns: repeat(2,1fr) !important; }
+  .footer-top { grid-template-columns: 1fr !important; }
+  .sec-divider { flex-direction: column; gap: 12px; text-align: center; }
+}
