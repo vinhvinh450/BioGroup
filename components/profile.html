@@ -518,6 +518,16 @@
     // ---- Kiểm tra đăng nhập ----
     let isAuthenticated = false;
     
+    // Hiện nút Admin ngay từ localStorage (không cần chờ API)
+    try {
+      const _cachedUser = JSON.parse(localStorage.getItem('user') || '{}');
+      const _cachedRole = _cachedUser.role || _cachedUser.Role || '';
+      if (_cachedRole === 'Admin') {
+        const adminBtn = document.getElementById('adminMenuItem');
+        if (adminBtn) adminBtn.style.display = '';
+      }
+    } catch {}
+
     if (!_profileToken) {
       // Không có token → redirect ngay
       window.location.href = '../index.html';
