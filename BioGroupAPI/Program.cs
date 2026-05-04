@@ -20,9 +20,12 @@ builder.Services.AddSwaggerGen();
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 if (!string.IsNullOrEmpty(databaseUrl))
 {
-    // Render PostgreSQL
+    // Render cung cấp URI format — convert sang Npgsql connection string
+    var uri      = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':');
+    var pgConn   = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
     builder.Services.AddDbContext<BioGroupContext>(options =>
-        options.UseNpgsql(databaseUrl));
+        options.UseNpgsql(pgConn));
 }
 else
 {
