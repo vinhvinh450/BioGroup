@@ -55,8 +55,9 @@ function makeProductCard(product) {
   const saleBadge = product.discountPercent > 0
     ? `<div class="prod-badge badge-sale">-${product.discountPercent}%</div>`
     : `<div class="prod-badge ${product.badgeClass}">${product.badge}</div>`;
+  const detailUrl = `product-detail.html?id=${product.id}`;
   return `
-    <div class="product-card">
+    <div class="product-card" onclick="window.location.href='${detailUrl}'" style="cursor:pointer">
       <div class="product-img">
         <img
           src="${product.img}"
@@ -73,7 +74,9 @@ function makeProductCard(product) {
         <div class="product-stock ${product.stock <= 0 ? 'out-of-stock' : product.stock <= 10 ? 'low-stock' : ''}">
           ${product.stock <= 0 ? 'Hết hàng' : product.stock <= 10 ? `Còn ${product.stock} sản phẩm` : `Còn ${product.stock} sản phẩm`}
         </div>
-        <button class="add-cart-btn" onclick="addToCart(${product.id})" ${product.stock <= 0 ? 'disabled' : ''}>
+        <button class="add-cart-btn"
+          onclick="event.stopPropagation(); addToCart(${JSON.stringify(product.id)})"
+          ${product.stock <= 0 ? 'disabled' : ''}>
           ${product.stock <= 0 ? 'Hết hàng' : '+ Thêm vào giỏ hàng'}
         </button>
       </div>

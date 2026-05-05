@@ -233,6 +233,11 @@
       transition: border-color .2s, box-shadow .2s; background: var(--white);
     }
     .form-field textarea { resize: vertical; min-height: 80px; }
+    .badge-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+    .badge-opt { padding: 5px 12px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; font-size: 12px; font-weight: 700; transition: opacity .15s, outline .15s; opacity: .75; }
+    .badge-opt:hover { opacity: 1; }
+    .badge-opt.active { outline: 3px solid #000; outline-offset: 2px; opacity: 1; }
+    .badge-opt-none { background: var(--bg-2,#f5f5f5); color: var(--text-2,#666); border-color: var(--border,#ddd); }
     .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
       border-color: var(--brand); box-shadow: 0 0 0 3px rgba(26,122,60,.1);
     }
@@ -600,6 +605,20 @@
       <input type="hidden" id="pId" />
       <input type="hidden" id="pBadge" />
       <input type="hidden" id="pBadgeClass" />
+      <!-- Badge picker (visual) -->
+      <div class="form-row full" style="padding-bottom:10px">
+        <div class="form-field">
+          <label>🏷️ Nhãn (Badge)</label>
+          <div class="badge-picker" id="badgePicker">
+            <button type="button" class="badge-opt badge-opt-none" data-badge="" data-class="" onclick="selectBadge(this)">Không có</button>
+            <button type="button" class="badge-opt" data-badge="🌱 New" data-class="badge-new" style="background:#2e7d32;color:#fff" onclick="selectBadge(this)">🌱 New</button>
+            <button type="button" class="badge-opt" data-badge="🌿 Eco" data-class="badge-eco" style="background:#00897b;color:#fff" onclick="selectBadge(this)">🌿 Eco</button>
+            <button type="button" class="badge-opt" data-badge="⭐ Featured" data-class="badge-feat" style="background:#f57c00;color:#fff" onclick="selectBadge(this)">⭐ Featured</button>
+            <button type="button" class="badge-opt" data-badge="💡 Innovation" data-class="badge-inno" style="background:#6a1b9a;color:#fff" onclick="selectBadge(this)">💡 Innovation</button>
+            <button type="button" class="badge-opt" data-badge="🏢 Đối tác" data-class="badge-partner" style="background:#757575;color:#fff" onclick="selectBadge(this)">🏢 Đối tác</button>
+          </div>
+        </div>
+      </div>
       <input type="hidden" id="pIcon" />
       <input type="hidden" id="pIsFeatured" />
       <div class="form-row">
@@ -1088,6 +1107,11 @@ function openProductModal(p) {
   document.getElementById('pId').value         = p ? (norm(p,'id') || '')                        : '';
   document.getElementById('pBadge').value      = p ? (norm(p,'badge') || '')                     : '';
   document.getElementById('pBadgeClass').value = p ? (norm(p,'badgeClass') || '')                : '';
+  // Highlight active badge button
+  const curClass = p ? (norm(p,'badgeClass') || '') : '';
+  document.querySelectorAll('#badgePicker .badge-opt').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.querySelector(`#badgePicker .badge-opt[data-class="${curClass}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
   document.getElementById('pIcon').value       = p ? (norm(p,'icon') || '📦')                   : '📦';
   document.getElementById('pIsFeatured').value = p ? String(norm(p,'isFeatured') ?? false)       : 'false';
   document.getElementById('pName').value       = p ? (norm(p,'name') || '')                      : '';
@@ -1104,6 +1128,12 @@ function openProductModal(p) {
   document.getElementById('productModal').classList.add('show');
 }
 function closeProductModal() { document.getElementById('productModal').classList.remove('show'); }
+function selectBadge(btn) {
+  document.querySelectorAll('#badgePicker .badge-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pBadge').value = btn.dataset.badge;
+  document.getElementById('pBadgeClass').value = btn.dataset.class;
+}
 
 async function saveProduct() {
   const id = document.getElementById('pId').value;

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi Tiết Sản Phẩm — BioWraps Vietnam</title>
+  <meta name="description" content="Xem chi tiết sản phẩm bao bì sinh học BioWraps Vietnam." />
+
+  <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/product.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+  <link rel="stylesheet" href="css/cart.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/chatbox.css" />
+  <link rel="stylesheet" href="css/product-detail.css" />
+</head>
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <div id="comp-modal"></div>
+  <div id="comp-cart"></div>
+  <div id="comp-header"></div>
+
+  <div class="main">
+
+    <!-- Breadcrumb -->
+    <div class="pd-breadcrumb" id="pdBreadcrumb">
+      <a href="index.html">🏠 Trang chủ</a>
+      <span>›</span>
+      <span id="bc-category">Sản phẩm</span>
+      <span>›</span>
+      <span id="bc-name" class="bc-current">Đang tải...</span>
+    </div>
+
+    <!-- Loading -->
+    <div id="pdLoading" class="pd-loading">
+      <div class="pd-spinner">🌿</div>
+      <div>Đang tải thông tin sản phẩm...</div>
+    </div>
+
+    <!-- Error -->
+    <div id="pdError" class="pd-error" style="display:none">
+      <div style="font-size:52px;margin-bottom:12px">😕</div>
+      <div class="pd-error-title">Không tìm thấy sản phẩm</div>
+      <div class="pd-error-sub">Sản phẩm này không tồn tại hoặc đã ngừng kinh doanh.</div>
+      <a href="index.html" class="pd-back-btn">← Quay lại trang chủ</a>
+    </div>
+
+    <!-- Nội dung chi tiết -->
+    <div id="pdContent" style="display:none">
+
+      <!-- Main: 2 cột (ảnh | thông tin) -->
+      <div class="pd-main">
+
+        <!-- Cột trái: Gallery ảnh -->
+        <div class="pd-gallery">
+          <div class="pd-img-main" id="pdImgMain">
+            <img id="pdMainImg" src="" alt=""
+              onerror="this.style.display='none';document.getElementById('pdImgFallback').style.display='flex'" />
+            <div class="pd-img-fallback" id="pdImgFallback"></div>
+            <div class="pd-badge" id="pdBadge"></div>
+          </div>
+          <div class="pd-img-thumbs" id="pdThumbs"></div>
+        </div>
+
+        <!-- Cột phải: Thông tin sản phẩm -->
+        <div class="pd-info">
+
+          <div class="pd-cat-tag" id="pdCat"></div>
+          <h1 class="pd-name" id="pdName"></h1>
+
+          <!-- Giá -->
+          <div class="pd-price-row dual-price" id="pdPriceRow"></div>
+
+          <!-- Tồn kho -->
+          <div class="pd-stock-row" id="pdStockRow"></div>
+
+          <!-- Mô tả ngắn -->
+          <div class="pd-desc" id="pdDesc"></div>
+
+          <!-- Số lượng -->
+          <div class="pd-qty-row">
+            <div class="pd-qty-label">Số lượng:</div>
+            <div class="pd-qty-ctrl">
+              <button class="pd-qty-btn" onclick="pdChangeQty(-1)">−</button>
+              <input class="pd-qty-input" id="pdQtyInput"
+                type="number" value="1" min="1" max="999"
+                onchange="this.value = Math.max(1, Math.min(parseInt(this.value)||1, parseInt(this.max)||999))" />
+              <button class="pd-qty-btn" onclick="pdChangeQty(1)">+</button>
+            </div>
+            <div class="pd-qty-stock" id="pdQtyMax"></div>
+          </div>
+
+          <!-- Nút CTA -->
+          <div class="pd-actions">
+            <button class="pd-btn-cart" id="pdBtnCart" onclick="pdAddToCart()">
+              🛒 Thêm vào giỏ hàng
+            </button>
+            <button class="pd-btn-buy" id="pdBtnBuy" onclick="pdBuyNow()">
+              ⚡ Mua ngay
+            </button>
+          </div>
+
+          <!-- Meta -->
+          <div class="pd-meta" id="pdMeta">
+            <div class="pd-meta-item">
+              <span class="pd-meta-label">Danh mục:</span>
+              <span id="pdMetaCat"></span>
+            </div>
+            <div class="pd-meta-item">
+              <span class="pd-meta-label">Mã sản phẩm:</span>
+              <span id="pdMetaId"></span>
+            </div>
+          </div>
+
+          <!-- Trust badges -->
+          <div class="pd-trust">
+            <div class="pd-trust-item">✅ Sản phẩm chính hãng</div>
+            <div class="pd-trust-item">🚚 Giao hàng toàn quốc</div>
+            <div class="pd-trust-item">♻️ 100% tự phân hủy sinh học</div>
+            <div class="pd-trust-item">🔒 Thanh toán an toàn</div>
+          </div>
+
+        </div>
+      </div><!-- /pd-main -->
+
+      <!-- Tabs: Mô tả / Thông số / Đánh giá -->
+      <div class="pd-tabs">
+        <div class="pd-tab-btns">
+          <button class="pd-tab-btn active" onclick="switchTab('desc', this)">📋 Mô tả</button>
+          <button class="pd-tab-btn" onclick="switchTab('specs', this)">📐 Thông số</button>
+          <button class="pd-tab-btn" onclick="switchTab('reviews', this)">⭐ Đánh giá</button>
+        </div>
+        <div class="pd-tab-content" id="tab-desc"></div>
+        <div class="pd-tab-content" id="tab-specs" style="display:none">
+          <div class="pd-specs-placeholder">
+            <div class="pd-placeholder-icon">📐</div>
+            <div>Thông số kỹ thuật đang được cập nhật.</div>
+          </div>
+        </div>
+        <div class="pd-tab-content" id="tab-reviews" style="display:none">
+          <div class="pd-specs-placeholder">
+            <div class="pd-placeholder-icon">⭐</div>
+            <div>Chưa có đánh giá nào. Hãy là người đầu tiên!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sản phẩm liên quan -->
+      <div id="relatedSection" style="display:none">
+        <div class="sec-head">
+          <div class="sec-title">🌱 Sản Phẩm Liên Quan</div>
+          <a href="index.html" class="see-all">Xem tất cả ›</a>
+        </div>
+        <div class="prod-grid" id="relatedProducts"></div>
+      </div>
+
+    </div><!-- /pdContent -->
+
+  </div><!-- /main -->
+
+  <div id="comp-footer"></div>
+
+  <!-- JAVASCRIPT -->
+  <script src="js/main.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/product.js"></script>
+  <script src="js/chatbox.js"></script>
+  <script src="js/product-detail.js"></script>
+
+  <script>
+    async function loadComponent(id, file) {
+      try {
+        const res = await fetch(file);
+        if (!res.ok) throw new Error();
+        document.getElementById(id).innerHTML = await res.text();
+      } catch(e) {
+        console.warn(`Không thể load component: ${file}`);
+      }
+    }
+
+    Promise.all([
+      loadComponent('comp-modal',  'components/modal.html'),
+      loadComponent('comp-cart',   'components/cart.html'),
+      loadComponent('comp-header', 'components/header.html'),
+      loadComponent('comp-footer', 'components/footer.html'),
+    ]).then(async () => {
+      console.log('✅ Components loaded');
+
+      // Tải tỷ giá & sản phẩm
+      await fetchExchangeRate();
+      try {
+        await loadProductsFromAPI();
+      } catch (e) {
+        console.warn('Không tải được danh sách sản phẩm, sẽ gọi API trực tiếp');
+      }
+
+      // Kiểm tra auth
+      const token = localStorage.getItem('token');
+      if (token && !_isTokenExpired(token)) {
+        const saved = JSON.parse(localStorage.getItem('user') || '{}');
+        _setLoggedIn(saved.name || 'User');
+      } else if (token) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+
+      // Click outside modal
+      const overlay = document.getElementById('loginOverlay');
+      if (overlay) {
+        overlay.addEventListener('click', e => {
+          if (e.target === overlay) closeLogin();
+        });
+      }
+
+      // Tải chi tiết sản phẩm
+      await loadProductDetail();
+
+    }).catch(err => {
+      console.error('❌ Error:', err);
+      showPdError();
+    });
+  </script>
+
+</body>
+</html>
